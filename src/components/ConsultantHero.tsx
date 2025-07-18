@@ -54,12 +54,12 @@ const SceneOne = () => {
     <motion.section 
       ref={ref}
       style={{ opacity }}
-      className="min-h-screen flex items-center justify-center relative overflow-hidden bg-gradient-to-b from-surface to-surface-light"
+      className="min-h-screen flex items-center justify-center relative overflow-hidden bg-gradient-to-b from-surface to-surface-light pt-20"
     >
       <div className="container mx-auto px-6 text-center relative z-10">
         {/* Animated Emisia Logo */}
         <motion.div
-          className="relative mx-auto w-36 h-12 md:w-40 md:h-14 mb-8 flex items-center justify-center"
+          className="relative mx-auto w-36 h-12 md:w-40 md:h-14 mb-6 flex items-center justify-center"
           style={{ scale }}
         >
           {/* Three squares animation - Sequential reveal */}
@@ -139,7 +139,7 @@ const SceneOne = () => {
           className="max-w-2xl mx-auto"
         >
           {/* High contrast, readable text */}
-          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
+          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-4">
             Professional Carbon Reporting <span className="text-primary">Made Accessible</span>
           </h1>
           <p className="text-xl text-gray-700 leading-relaxed font-medium">
@@ -148,7 +148,7 @@ const SceneOne = () => {
           
           {/* Animated Icons Section */}
           <motion.div
-            className="flex justify-center items-center gap-8 md:gap-12 mt-12 mb-8"
+            className="flex justify-center items-center gap-8 md:gap-12 mt-8 mb-6"
             initial={{ opacity: 0, y: 20 }}
             animate={hasLoaded ? { opacity: 1, y: 0 } : {}}
             transition={{ delay: 1.2, duration: 0.8 }}
@@ -240,7 +240,7 @@ const SceneOne = () => {
           
           {/* Scroll indicator */}
           <motion.div
-            className="mt-12"
+            className="mt-8"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.5 }}
