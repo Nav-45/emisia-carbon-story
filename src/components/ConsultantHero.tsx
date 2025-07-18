@@ -1061,11 +1061,20 @@ const ConsultantHero = () => {
           <div className="flex items-center justify-between">
             {/* Logo */}
             <div className="flex items-center gap-3">
-              <img 
-                src="/lovable-uploads/a7d0859c-166d-4a61-bdc8-78d821279205.png" 
-                alt="Emisia Logo" 
-                className="h-10 w-auto object-contain"
-              />
+              <div className="flex gap-1">
+                {/* First square */}
+                <div className="w-6 h-6 bg-emisia-green rounded-md relative overflow-hidden">
+                  <div className="absolute bottom-0 right-0 w-3 h-3 bg-white rounded-tl-full"></div>
+                </div>
+                {/* Second square */}
+                <div className="w-6 h-6 bg-emisia-green rounded-md relative overflow-hidden">
+                  <div className="absolute bottom-0 right-0 w-3 h-3 bg-white rounded-tl-full"></div>
+                </div>
+                {/* Third square */}
+                <div className="w-6 h-6 bg-emisia-green rounded-md relative overflow-hidden">
+                  <div className="absolute bottom-0 right-0 w-3 h-3 bg-white rounded-tl-full"></div>
+                </div>
+              </div>
             </div>
             
             {/* Navigation Links */}
