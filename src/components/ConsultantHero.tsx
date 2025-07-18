@@ -57,56 +57,79 @@ const SceneOne = () => {
       className="min-h-screen flex items-center justify-center relative overflow-hidden bg-gradient-to-b from-surface to-surface-light"
     >
       <div className="container mx-auto px-6 text-center relative z-10">
+        {/* Animated Emisia Logo */}
         <motion.div
+          className="relative mx-auto w-36 h-12 md:w-40 md:h-14 mb-8 flex items-center justify-center"
           style={{ scale }}
-          className="relative mx-auto w-80 h-80 mb-8"
         >
-          {/* Globe - immediately visible */}
-          <motion.div
-            className="w-32 h-32 bg-gradient-to-br from-primary to-primary-variant rounded-full mx-auto mb-8 relative shadow-elegant"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={hasLoaded ? { 
-              opacity: 1, 
-              scale: 1,
-              rotate: 360 
-            } : {}}
-            transition={{ 
-              duration: 1.5,
-              rotate: { duration: 20, repeat: Infinity, ease: "linear" }
-            }}
-          >
-            <Globe className="w-16 h-16 text-white absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
-          </motion.div>
+          {/* Three squares animation - Sequential reveal */}
+          <div className="flex gap-1">
+            {/* First square */}
+            <motion.div
+              className="w-10 h-10 md:w-12 md:h-12 bg-emisia-green rounded-lg relative overflow-hidden"
+              initial={{ opacity: 0, x: -30 }}
+              animate={{
+                opacity: [0, 1, 1, 1, 1, 0],
+                x: [-30, 0, 0, 0, 0, -30],
+              }}
+              transition={{
+                duration: 4.1,
+                delay: 0.5,
+                ease: "easeInOut",
+                repeat: Infinity,
+                repeatDelay: 2
+              }}
+              style={{
+                filter: "drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1))"
+              }}
+            >
+              <div className="absolute bottom-0 right-0 w-5 h-5 md:w-6 md:h-6 bg-white rounded-tl-full"></div>
+            </motion.div>
 
-          {/* Industrial elements - quick animation */}
-          <motion.div 
-            className="flex justify-around items-center"
-            initial={{ opacity: 0, y: 30 }}
-            animate={hasLoaded ? { opacity: 1, y: 0 } : {}}
-            transition={{ delay: 0.3, duration: 0.8, staggerChildren: 0.1 }}
-          >
-            {[Factory, Truck, Database, Zap].map((Icon, index) => (
-              <motion.div
-                key={index}
-                className="relative"
-                initial={{ opacity: 0, scale: 0 }}
-                animate={hasLoaded ? { opacity: 1, scale: 1 } : {}}
-                transition={{ delay: 0.5 + index * 0.1 }}
-                whileInView={{ 
-                  y: [0, -8, 0],
-                  transition: { duration: 2, repeat: Infinity, delay: index * 0.3 }
-                }}
-              >
-                <div className="w-12 h-12 bg-surface rounded-lg flex items-center justify-center shadow-soft border border-border-subtle">
-                  <Icon className="w-6 h-6 text-text-secondary" />
-                </div>
-                {/* Carbon particles */}
-                {hasLoaded && Array.from({ length: 3 }).map((_, i) => (
-                  <CarbonParticle key={i} delay={i * 0.5 + index * 0.3} />
-                ))}
-              </motion.div>
-            ))}
-          </motion.div>
+            {/* Second square */}
+            <motion.div
+              className="w-10 h-10 md:w-12 md:h-12 bg-emisia-green rounded-lg relative overflow-hidden"
+              initial={{ opacity: 0, x: -30 }}
+              animate={{
+                opacity: [0, 0, 1, 1, 1, 0],
+                x: [-30, -30, 0, 0, 0, -30],
+              }}
+              transition={{
+                duration: 4.1,
+                delay: 0.5,
+                ease: "easeInOut",
+                repeat: Infinity,
+                repeatDelay: 2
+              }}
+              style={{
+                filter: "drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1))"
+              }}
+            >
+              <div className="absolute bottom-0 right-0 w-5 h-5 md:w-6 md:h-6 bg-white rounded-tl-full"></div>
+            </motion.div>
+
+            {/* Third square */}
+            <motion.div
+              className="w-10 h-10 md:w-12 md:h-12 bg-emisia-green rounded-lg relative overflow-hidden"
+              initial={{ opacity: 0, x: -30 }}
+              animate={{
+                opacity: [0, 0, 0, 1, 1, 0],
+                x: [-30, -30, -30, 0, 0, -30],
+              }}
+              transition={{
+                duration: 4.1,
+                delay: 0.5,
+                ease: "easeInOut",
+                repeat: Infinity,
+                repeatDelay: 2
+              }}
+              style={{
+                filter: "drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1))"
+              }}
+            >
+              <div className="absolute bottom-0 right-0 w-5 h-5 md:w-6 md:h-6 bg-white rounded-tl-full"></div>
+            </motion.div>
+          </div>
         </motion.div>
 
         <motion.div
@@ -117,10 +140,10 @@ const SceneOne = () => {
         >
           {/* High contrast, readable text */}
           <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-            Where Emissions <span className="text-primary">Begin</span>
+            Professional Carbon Reporting <span className="text-primary">Made Accessible</span>
           </h1>
           <p className="text-xl text-gray-700 leading-relaxed font-medium">
-            Emissions start at every step – raw materials, energy, logistics, and more.
+            Streamline your carbon assessment process with intelligent automation.
           </p>
           
           {/* Scroll indicator */}
