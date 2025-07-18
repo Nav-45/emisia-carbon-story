@@ -146,6 +146,98 @@ const SceneOne = () => {
             Streamline your carbon assessment process with intelligent automation.
           </p>
           
+          {/* Animated Icons Section */}
+          <motion.div
+            className="flex justify-center items-center gap-8 md:gap-12 mt-12 mb-8"
+            initial={{ opacity: 0, y: 20 }}
+            animate={hasLoaded ? { opacity: 1, y: 0 } : {}}
+            transition={{ delay: 1.2, duration: 0.8 }}
+          >
+            {/* Factory Icon */}
+            <motion.div
+              className="flex flex-col items-center"
+              whileHover={{ scale: 1.1 }}
+              animate={{
+                y: [0, -8, 0],
+              }}
+              transition={{
+                y: {
+                  duration: 2.5,
+                  repeat: Infinity,
+                  delay: 0,
+                  ease: "easeInOut"
+                }
+              }}
+            >
+              <div className="w-12 h-12 md:w-16 md:h-16 bg-emisia-green/10 rounded-full flex items-center justify-center">
+                <Factory className="w-6 h-6 md:w-8 md:h-8 text-emisia-green" />
+              </div>
+            </motion.div>
+
+            {/* Transport/Truck Icon */}
+            <motion.div
+              className="flex flex-col items-center"
+              whileHover={{ scale: 1.1 }}
+              animate={{
+                y: [0, -8, 0],
+              }}
+              transition={{
+                y: {
+                  duration: 2.5,
+                  repeat: Infinity,
+                  delay: 0.6,
+                  ease: "easeInOut"
+                }
+              }}
+            >
+              <div className="w-12 h-12 md:w-16 md:h-16 bg-emisia-green/10 rounded-full flex items-center justify-center">
+                <Truck className="w-6 h-6 md:w-8 md:h-8 text-emisia-green" />
+              </div>
+            </motion.div>
+
+            {/* Database Icon */}
+            <motion.div
+              className="flex flex-col items-center"
+              whileHover={{ scale: 1.1 }}
+              animate={{
+                y: [0, -8, 0],
+              }}
+              transition={{
+                y: {
+                  duration: 2.5,
+                  repeat: Infinity,
+                  delay: 1.2,
+                  ease: "easeInOut"
+                }
+              }}
+            >
+              <div className="w-12 h-12 md:w-16 md:h-16 bg-emisia-green/10 rounded-full flex items-center justify-center">
+                <Database className="w-6 h-6 md:w-8 md:h-8 text-emisia-green" />
+              </div>
+            </motion.div>
+
+            {/* Energy/Lightning Icon */}
+            <motion.div
+              className="flex flex-col items-center"
+              whileHover={{ scale: 1.1 }}
+              animate={{
+                y: [0, -8, 0],
+              }}
+              transition={{
+                y: {
+                  duration: 2.5,
+                  repeat: Infinity,
+                  delay: 1.8,
+                  ease: "easeInOut"
+                }
+              }}
+            >
+              <div className="w-12 h-12 md:w-16 md:h-16 bg-emisia-green/10 rounded-full flex items-center justify-center">
+                <Zap className="w-6 h-6 md:w-8 md:h-8 text-emisia-green" />
+              </div>
+            </motion.div>
+          </motion.div>
+          
           {/* Scroll indicator */}
           <motion.div
             className="mt-12"
