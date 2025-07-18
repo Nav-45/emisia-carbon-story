@@ -935,21 +935,54 @@ const ConsultantHero = () => {
 
   return (
     <div className="relative">
-      {/* Emisia Logo Header */}
-      <motion.div 
-        className="fixed top-8 left-8 z-50"
+      {/* Navigation Bar */}
+      <motion.nav 
+        className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-200"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.5, duration: 0.8 }}
+        transition={{ delay: 0.3, duration: 0.8 }}
       >
-        <div className="flex items-center gap-3">
-          <img 
-            src="/lovable-uploads/a7d0859c-166d-4a61-bdc8-78d821279205.png" 
-            alt="Emisia Logo" 
-            className="h-12 w-auto object-contain"
-          />
+        <div className="max-w-7xl mx-auto px-8 py-4">
+          <div className="flex items-center justify-between">
+            {/* Logo */}
+            <div className="flex items-center gap-3">
+              <img 
+                src="/lovable-uploads/a7d0859c-166d-4a61-bdc8-78d821279205.png" 
+                alt="Emisia Logo" 
+                className="h-10 w-auto object-contain"
+              />
+            </div>
+            
+            {/* Navigation Links */}
+            <div className="hidden md:flex items-center gap-8">
+              <a href="#features" className="text-gray-700 hover:text-emisia-green transition-colors duration-200">
+                Features
+              </a>
+              <a href="#pricing" className="text-gray-700 hover:text-emisia-green transition-colors duration-200">
+                Pricing
+              </a>
+              <a href="#resources" className="text-gray-700 hover:text-emisia-green transition-colors duration-200">
+                Resources
+              </a>
+              <a href="#about" className="text-gray-700 hover:text-emisia-green transition-colors duration-200">
+                About
+              </a>
+              
+              {/* Sign In Button */}
+              <button className="px-6 py-2 bg-white border-2 border-emisia-green text-emisia-green rounded-lg hover:bg-emisia-green hover:text-white transition-all duration-200 font-medium">
+                Sign In
+              </button>
+            </div>
+            
+            {/* Mobile Menu Button */}
+            <button className="md:hidden p-2 text-gray-700">
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+          </div>
         </div>
-      </motion.div>
+      </motion.nav>
 
       {/* Progress indicator */}
       <motion.div
