@@ -935,6 +935,26 @@ const ConsultantHero = () => {
 
   return (
     <div className="relative">
+      {/* Emisia.io Logo Header */}
+      <motion.div 
+        className="fixed top-8 left-8 z-50"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.5, duration: 0.8 }}
+      >
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1">
+            <div className="w-4 h-4 bg-carbon-mint rounded-sm rotate-12 opacity-90"></div>
+            <div className="w-4 h-4 bg-carbon-sage rounded-sm -rotate-12 opacity-70"></div>
+            <div className="w-4 h-4 bg-carbon-mint rounded-sm rotate-45 opacity-80"></div>
+          </div>
+          <div className="flex flex-col">
+            <span className="text-xl font-bold text-gray-900">Emisia.io</span>
+            <span className="text-xs text-gray-600">Smart Carbon Reporting</span>
+          </div>
+        </div>
+      </motion.div>
+
       {/* Progress indicator */}
       <motion.div
         className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary to-primary-variant z-50 origin-left"
