@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion, useAnimation, useInView, useScroll, useTransform } from 'framer-motion';
 import { 
   Globe, Factory, Truck, FileText, Mail, Database, 
@@ -12,10 +12,10 @@ import { Card } from '@/components/ui/card';
 // Floating particle component for carbon visualization
 const CarbonParticle = ({ delay = 0, duration = 3 }) => (
   <motion.div
-    className="absolute w-2 h-2 bg-carbon-light rounded-full opacity-60"
+    className="absolute w-2 h-2 bg-carbon-light rounded-full"
     initial={{ opacity: 0, scale: 0 }}
     animate={{
-      opacity: [0, 0.6, 0],
+      opacity: [0, 0.8, 0],
       scale: [0, 1, 0],
       y: [-20, -60],
       x: Math.random() * 40 - 20,
@@ -29,17 +29,26 @@ const CarbonParticle = ({ delay = 0, duration = 3 }) => (
   />
 );
 
-// Scene 1: Where Emissions Begin
+// Scene 1: Where Emissions Begin (Hero - Always Visible)
 const SceneOne = () => {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: false, amount: 0.3 });
+  const isInView = useInView(ref, { once: false, amount: 0.1 });
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end start"]
   });
 
-  const opacity = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0, 1, 1, 0]);
-  const scale = useTransform(scrollYProgress, [0, 0.3, 0.7], [0.8, 1, 1.1]);
+  // Immediate load state - show content right away
+  const [hasLoaded, setHasLoaded] = useState(false);
+  
+  useEffect(() => {
+    // Trigger initial animation immediately
+    const timer = setTimeout(() => setHasLoaded(true), 100);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [1, 1, 1, 0.3]);
+  const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.95]);
 
   return (
     <motion.section 
@@ -52,35 +61,47 @@ const SceneOne = () => {
           style={{ scale }}
           className="relative mx-auto w-80 h-80 mb-8"
         >
-          {/* Globe */}
+          {/* Globe - immediately visible */}
           <motion.div
             className="w-32 h-32 bg-gradient-to-br from-primary to-primary-variant rounded-full mx-auto mb-8 relative shadow-elegant"
-            animate={{ rotate: isInView ? 360 : 0 }}
-            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={hasLoaded ? { 
+              opacity: 1, 
+              scale: 1,
+              rotate: 360 
+            } : {}}
+            transition={{ 
+              duration: 1.5,
+              rotate: { duration: 20, repeat: Infinity, ease: "linear" }
+            }}
           >
             <Globe className="w-16 h-16 text-white absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
           </motion.div>
 
-          {/* Industrial elements */}
+          {/* Industrial elements - quick animation */}
           <motion.div 
             className="flex justify-around items-center"
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ delay: 0.5, staggerChildren: 0.2 }}
+            initial={{ opacity: 0, y: 30 }}
+            animate={hasLoaded ? { opacity: 1, y: 0 } : {}}
+            transition={{ delay: 0.3, duration: 0.8, staggerChildren: 0.1 }}
           >
             {[Factory, Truck, Database, Zap].map((Icon, index) => (
               <motion.div
                 key={index}
                 className="relative"
                 initial={{ opacity: 0, scale: 0 }}
-                animate={isInView ? { opacity: 1, scale: 1 } : {}}
-                transition={{ delay: 0.7 + index * 0.2 }}
+                animate={hasLoaded ? { opacity: 1, scale: 1 } : {}}
+                transition={{ delay: 0.5 + index * 0.1 }}
+                whileInView={{ 
+                  y: [0, -8, 0],
+                  transition: { duration: 2, repeat: Infinity, delay: index * 0.3 }
+                }}
               >
                 <div className="w-12 h-12 bg-surface rounded-lg flex items-center justify-center shadow-soft border border-border-subtle">
                   <Icon className="w-6 h-6 text-text-secondary" />
                 </div>
                 {/* Carbon particles */}
-                {Array.from({ length: 3 }).map((_, i) => (
+                {hasLoaded && Array.from({ length: 3 }).map((_, i) => (
                   <CarbonParticle key={i} delay={i * 0.5 + index * 0.3} />
                 ))}
               </motion.div>
@@ -89,23 +110,45 @@ const SceneOne = () => {
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 1.2 }}
+          initial={{ opacity: 0, y: 40 }}
+          animate={hasLoaded ? { opacity: 1, y: 0 } : {}}
+          transition={{ delay: 0.8, duration: 0.8 }}
           className="max-w-2xl mx-auto"
         >
-          <h1 className="text-4xl md:text-6xl font-bold text-text-primary mb-6">
+          {/* High contrast, readable text */}
+          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
             Where Emissions <span className="text-primary">Begin</span>
           </h1>
-          <p className="text-xl text-text-secondary leading-relaxed">
+          <p className="text-xl text-gray-700 leading-relaxed font-medium">
             Emissions start at every step – raw materials, energy, logistics, and more.
           </p>
+          
+          {/* Scroll indicator */}
+          <motion.div
+            className="mt-12"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.5 }}
+          >
+            <motion.div
+              animate={{ y: [0, 8, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity }}
+              className="w-6 h-10 border-2 border-primary rounded-full mx-auto flex justify-center"
+            >
+              <motion.div
+                animate={{ y: [2, 6, 2] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+                className="w-1 h-3 bg-primary rounded-full mt-2"
+              />
+            </motion.div>
+            <p className="text-sm text-gray-500 mt-2">Scroll to explore</p>
+          </motion.div>
         </motion.div>
       </div>
 
-      {/* Background particles */}
+      {/* Background particles - subtle and immediate */}
       <div className="absolute inset-0 overflow-hidden">
-        {Array.from({ length: 20 }).map((_, i) => (
+        {hasLoaded && Array.from({ length: 20 }).map((_, i) => (
           <motion.div
             key={i}
             className="absolute w-1 h-1 bg-carbon-light rounded-full"
@@ -114,7 +157,7 @@ const SceneOne = () => {
               top: `${Math.random() * 100}%`,
             }}
             animate={{
-              opacity: [0, 0.3, 0],
+              opacity: [0, 0.4, 0],
               y: [-10, -30],
             }}
             transition={{
@@ -133,58 +176,70 @@ const SceneOne = () => {
 // Scene 2: The Consultant's Challenge
 const SceneTwo = () => {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: false, amount: 0.3 });
+  const isInView = useInView(ref, { once: false, amount: 0.2 });
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end start"]
   });
 
-  const opacity = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0, 1, 1, 0]);
+  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0.3]);
 
   const documentItems = [
     { icon: FileText, label: "Invoices", delay: 0 },
-    { icon: Mail, label: "Emails", delay: 0.2 },
-    { icon: Database, label: "Excel Sheets", delay: 0.4 },
-    { icon: FileCheck, label: "PDFs", delay: 0.6 },
-    { icon: BarChart3, label: "Emission Factors", delay: 0.8 },
+    { icon: Mail, label: "Emails", delay: 0.1 },
+    { icon: Database, label: "Excel Sheets", delay: 0.2 },
+    { icon: FileCheck, label: "PDFs", delay: 0.3 },
+    { icon: BarChart3, label: "Emission Factors", delay: 0.4 },
   ];
 
   return (
     <motion.section 
       ref={ref}
       style={{ opacity }}
-      className="min-h-screen flex items-center justify-center bg-gradient-to-b from-surface-light to-surface"
+      className="min-h-screen flex items-center justify-center bg-gradient-to-b from-surface-light to-surface relative"
     >
       <div className="container mx-auto px-6 text-center">
+        {/* Section entrance indicator */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ width: 0 }}
+          animate={isInView ? { width: "100px" } : {}}
+          transition={{ duration: 0.8 }}
+          className="h-1 bg-primary mx-auto mb-8 rounded"
+        />
+
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.3 }}
+          transition={{ delay: 0.2, duration: 0.8 }}
           className="mb-12"
         >
-          <h2 className="text-3xl md:text-5xl font-bold text-text-primary mb-6">
+          <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-6">
             The Consultant's <span className="text-accent">Challenge</span>
           </h2>
-          <p className="text-xl text-text-secondary max-w-2xl mx-auto">
+          <p className="text-xl text-gray-700 max-w-2xl mx-auto font-medium">
             Carbon consultants piece together data from scattered sources…
           </p>
         </motion.div>
 
         <div className="relative max-w-4xl mx-auto">
-          {/* Central consultant figure */}
+          {/* Central consultant figure with bounce effect */}
           <motion.div
             className="w-24 h-24 bg-gradient-to-br from-primary to-primary-variant rounded-full mx-auto mb-8 flex items-center justify-center shadow-elegant"
             initial={{ opacity: 0, scale: 0 }}
             animate={isInView ? { opacity: 1, scale: 1 } : {}}
-            transition={{ delay: 0.5 }}
+            transition={{ delay: 0.4, duration: 0.6, type: "spring", stiffness: 200 }}
+            whileInView={{
+              scale: [1, 1.1, 1],
+              transition: { duration: 2, repeat: Infinity }
+            }}
           >
             <Users className="w-12 h-12 text-white" />
           </motion.div>
 
-          {/* Floating documents */}
+          {/* Floating documents with better feedback */}
           <div className="relative h-80">
             {documentItems.map((item, index) => {
-              const angle = (index * 72) * (Math.PI / 180); // 72 degrees between items
+              const angle = (index * 72) * (Math.PI / 180);
               const radius = 180;
               const x = Math.cos(angle) * radius;
               const y = Math.sin(angle) * radius;
@@ -211,15 +266,19 @@ const SceneTwo = () => {
                     rotate: Math.random() * 20 - 10
                   } : {}}
                   transition={{ 
-                    delay: item.delay + 0.7,
+                    delay: item.delay + 0.6,
                     duration: 0.8,
                     type: "spring",
                     stiffness: 100
                   }}
+                  whileInView={{
+                    y: [y, y - 10, y],
+                    transition: { duration: 3, repeat: Infinity, delay: index * 0.2 }
+                  }}
                 >
                   <Card className="p-4 bg-surface shadow-soft border border-border-subtle hover:shadow-elegant transition-all duration-300">
-                    <item.icon className="w-8 h-8 text-text-secondary mx-auto mb-2" />
-                    <p className="text-sm text-text-secondary font-medium">{item.label}</p>
+                    <item.icon className="w-8 h-8 text-gray-600 mx-auto mb-2" />
+                    <p className="text-sm text-gray-600 font-medium">{item.label}</p>
                   </Card>
                 </motion.div>
               );
@@ -234,13 +293,13 @@ const SceneTwo = () => {
 // Scene 3: A Complex Puzzle
 const SceneThree = () => {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: false, amount: 0.3 });
+  const isInView = useInView(ref, { once: false, amount: 0.2 });
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end start"]
   });
 
-  const opacity = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0, 1, 1, 0]);
+  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0.3]);
 
   const scopeItems = [
     { number: "1", label: "Direct Emissions", color: "bg-gradient-to-br from-red-500 to-red-600" },
@@ -258,41 +317,54 @@ const SceneThree = () => {
       className="min-h-screen flex items-center justify-center bg-gradient-to-b from-surface to-surface-light"
     >
       <div className="container mx-auto px-6 text-center">
+        {/* Section entrance indicator */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ width: 0 }}
+          animate={isInView ? { width: "100px" } : {}}
+          transition={{ duration: 0.8 }}
+          className="h-1 bg-primary mx-auto mb-8 rounded"
+        />
+
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.3 }}
+          transition={{ delay: 0.2, duration: 0.8 }}
           className="mb-12"
         >
-          <h2 className="text-3xl md:text-5xl font-bold text-text-primary mb-6">
+          <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-6">
             A Complex <span className="text-primary">Puzzle</span>
           </h2>
-          <p className="text-xl text-text-secondary max-w-2xl mx-auto">
+          <p className="text-xl text-gray-700 max-w-2xl mx-auto font-medium">
             …map it to frameworks, scopes, and factors…
           </p>
         </motion.div>
 
         <div className="max-w-6xl mx-auto">
-          {/* Scope grid */}
+          {/* Scope grid with bounce effects */}
           <motion.div 
             className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12"
             initial={{ opacity: 0 }}
             animate={isInView ? { opacity: 1 } : {}}
-            transition={{ delay: 0.5 }}
+            transition={{ delay: 0.3 }}
           >
             {scopeItems.map((scope, index) => (
               <motion.div
                 key={scope.number}
-                initial={{ opacity: 0, y: 50, rotateX: -90 }}
+                initial={{ opacity: 0, y: 60, rotateX: -90 }}
                 animate={isInView ? { 
                   opacity: 1, 
                   y: 0, 
                   rotateX: 0 
                 } : {}}
                 transition={{ 
-                  delay: 0.7 + index * 0.2,
-                  duration: 0.6,
-                  type: "spring"
+                  delay: 0.4 + index * 0.15,
+                  duration: 0.7,
+                  type: "spring",
+                  stiffness: 100
+                }}
+                whileInView={{
+                  y: [0, -5, 0],
+                  transition: { duration: 2, repeat: Infinity, delay: index * 0.3 }
                 }}
                 className="relative"
               >
@@ -300,19 +372,19 @@ const SceneThree = () => {
                   <div className={`w-16 h-16 ${scope.color} rounded-full mx-auto mb-4 flex items-center justify-center shadow-elegant`}>
                     <span className="text-2xl font-bold text-white">{scope.number}</span>
                   </div>
-                  <h3 className="text-lg font-semibold text-text-primary mb-2">Scope {scope.number}</h3>
-                  <p className="text-sm text-text-secondary">{scope.label}</p>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">Scope {scope.number}</h3>
+                  <p className="text-sm text-gray-600">{scope.label}</p>
                 </Card>
               </motion.div>
             ))}
           </motion.div>
 
-          {/* Units animation */}
+          {/* Units animation with better visibility */}
           <motion.div 
             className="flex justify-center flex-wrap gap-4 mb-8"
             initial={{ opacity: 0 }}
             animate={isInView ? { opacity: 1 } : {}}
-            transition={{ delay: 1.2 }}
+            transition={{ delay: 0.8 }}
           >
             {unitItems.map((unit, index) => (
               <motion.div
@@ -320,19 +392,23 @@ const SceneThree = () => {
                 initial={{ opacity: 0, scale: 0 }}
                 animate={isInView ? { 
                   opacity: 1, 
-                  scale: 1,
-                  y: [0, -10, 0]
+                  scale: 1
                 } : {}}
                 transition={{ 
-                  delay: 1.4 + index * 0.1,
+                  delay: 0.9 + index * 0.1,
                   duration: 0.5,
-                  y: {
-                    duration: 2,
-                    repeat: Infinity,
-                    delay: index * 0.2
+                  type: "spring"
+                }}
+                whileInView={{
+                  y: [0, -10, 0],
+                  scale: [1, 1.1, 1],
+                  transition: { 
+                    duration: 2, 
+                    repeat: Infinity, 
+                    delay: index * 0.2 
                   }
                 }}
-                className="px-4 py-2 bg-accent rounded-full text-accent-foreground font-medium shadow-soft"
+                className="px-4 py-2 bg-accent rounded-full text-gray-800 font-semibold shadow-soft"
               >
                 {unit}
               </motion.div>
@@ -344,17 +420,21 @@ const SceneThree = () => {
             className="flex justify-center flex-wrap gap-4"
             initial={{ opacity: 0 }}
             animate={isInView ? { opacity: 1 } : {}}
-            transition={{ delay: 1.8 }}
+            transition={{ delay: 1.2 }}
           >
             {lcaStages.map((stage, index) => (
               <motion.div
                 key={stage}
                 initial={{ opacity: 0, x: -50 }}
                 animate={isInView ? { opacity: 1, x: 0 } : {}}
-                transition={{ delay: 2 + index * 0.2 }}
+                transition={{ delay: 1.3 + index * 0.15, type: "spring" }}
+                whileInView={{
+                  scale: [1, 1.05, 1],
+                  transition: { duration: 3, repeat: Infinity, delay: index * 0.5 }
+                }}
                 className="px-6 py-3 bg-surface border border-border-subtle rounded-lg shadow-soft"
               >
-                <span className="text-text-secondary font-medium">{stage}</span>
+                <span className="text-gray-700 font-medium">{stage}</span>
               </motion.div>
             ))}
           </motion.div>
@@ -367,13 +447,13 @@ const SceneThree = () => {
 // Scene 4: Introducing Capture
 const SceneFour = () => {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: false, amount: 0.3 });
+  const isInView = useInView(ref, { once: false, amount: 0.2 });
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end start"]
   });
 
-  const opacity = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0, 1, 1, 0]);
+  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0.3]);
 
   return (
     <motion.section 
@@ -382,64 +462,90 @@ const SceneFour = () => {
       className="min-h-screen flex items-center justify-center bg-gradient-to-b from-surface-light to-surface"
     >
       <div className="container mx-auto px-6 text-center">
+        {/* Section entrance indicator */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ width: 0 }}
+          animate={isInView ? { width: "100px" } : {}}
+          transition={{ duration: 0.8 }}
+          className="h-1 bg-primary mx-auto mb-8 rounded"
+        />
+
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.3 }}
+          transition={{ delay: 0.2, duration: 0.8 }}
           className="mb-12"
         >
-          <h2 className="text-3xl md:text-5xl font-bold text-text-primary mb-6">
+          <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-6">
             Introducing <span className="text-primary">Capture</span>
           </h2>
-          <p className="text-xl text-text-secondary max-w-2xl mx-auto">
+          <p className="text-xl text-gray-700 max-w-2xl mx-auto font-medium">
             Capture automates carbon calculations — from invoices to scope-tagged outputs.
           </p>
         </motion.div>
 
         <div className="max-w-4xl mx-auto">
-          {/* Upload flow */}
+          {/* Upload flow with pulse effects */}
           <div className="flex flex-col md:flex-row items-center justify-center gap-8 mb-12">
             <motion.div
-              initial={{ opacity: 0, x: -50 }}
+              initial={{ opacity: 0, x: -60 }}
               animate={isInView ? { opacity: 1, x: 0 } : {}}
-              transition={{ delay: 0.5 }}
+              transition={{ delay: 0.4, duration: 0.8 }}
               className="flex-1"
             >
               <Card className="p-8 bg-surface shadow-soft border border-border-subtle">
-                <Upload className="w-12 h-12 text-text-secondary mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-text-primary mb-2">Upload Data</h3>
-                <p className="text-text-secondary">Drag & drop invoices, receipts, activity data</p>
+                <motion.div
+                  whileInView={{
+                    scale: [1, 1.1, 1],
+                    transition: { duration: 2, repeat: Infinity }
+                  }}
+                >
+                  <Upload className="w-12 h-12 text-gray-600 mx-auto mb-4" />
+                </motion.div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">Upload Data</h3>
+                <p className="text-gray-600">Drag & drop invoices, receipts, activity data</p>
               </Card>
             </motion.div>
 
             <motion.div
               initial={{ opacity: 0, scale: 0 }}
               animate={isInView ? { opacity: 1, scale: 1 } : {}}
-              transition={{ delay: 0.7, type: "spring" }}
+              transition={{ delay: 0.6, type: "spring", stiffness: 200 }}
+              whileInView={{
+                x: [0, 10, 0],
+                transition: { duration: 1.5, repeat: Infinity }
+              }}
               className="w-12 h-12 bg-primary rounded-full flex items-center justify-center shadow-elegant"
             >
               <ArrowRight className="w-6 h-6 text-white" />
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, x: 50 }}
+              initial={{ opacity: 0, x: 60 }}
               animate={isInView ? { opacity: 1, x: 0 } : {}}
-              transition={{ delay: 0.9 }}
+              transition={{ delay: 0.8, duration: 0.8 }}
               className="flex-1"
             >
               <Card className="p-8 bg-surface shadow-soft border border-border-subtle">
-                <Settings className="w-12 h-12 text-text-secondary mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-text-primary mb-2">Auto-Process</h3>
-                <p className="text-text-secondary">AI extracts, categorizes, and maps to scopes</p>
+                <motion.div
+                  whileInView={{
+                    rotate: [0, 360],
+                    transition: { duration: 3, repeat: Infinity, ease: "linear" }
+                  }}
+                >
+                  <Settings className="w-12 h-12 text-gray-600 mx-auto mb-4" />
+                </motion.div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">Auto-Process</h3>
+                <p className="text-gray-600">AI extracts, categorizes, and maps to scopes</p>
               </Card>
             </motion.div>
           </div>
 
-          {/* Dashboard preview */}
+          {/* Dashboard preview with flash effects */}
           <motion.div
-            initial={{ opacity: 0, y: 50 }}
+            initial={{ opacity: 0, y: 60 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ delay: 1.1 }}
+            transition={{ delay: 1, duration: 0.8 }}
             className="relative"
           >
             <Card className="p-8 bg-surface shadow-elegant border border-border-subtle">
@@ -449,25 +555,38 @@ const SceneFour = () => {
                     key={scope}
                     initial={{ opacity: 0, scale: 0 }}
                     animate={isInView ? { opacity: 1, scale: 1 } : {}}
-                    transition={{ delay: 1.3 + scope * 0.1 }}
-                    className={`p-4 rounded-lg ${
-                      scope === 1 ? 'bg-red-100 border border-red-200' :
-                      scope === 2 ? 'bg-yellow-100 border border-yellow-200' :
-                      'bg-green-100 border border-green-200'
+                    transition={{ delay: 1.2 + scope * 0.1, type: "spring" }}
+                    whileInView={{
+                      borderColor: scope === 1 ? ["#ef4444", "#fee2e2", "#ef4444"] :
+                                   scope === 2 ? ["#f59e0b", "#fef3c7", "#f59e0b"] :
+                                   ["#10b981", "#d1fae5", "#10b981"],
+                      transition: { duration: 2, repeat: Infinity }
+                    }}
+                    className={`p-4 rounded-lg border-2 ${
+                      scope === 1 ? 'bg-red-50' :
+                      scope === 2 ? 'bg-yellow-50' :
+                      'bg-green-50'
                     }`}
                   >
                     <div className="flex items-center justify-between mb-2">
-                      <span className="font-semibold text-text-primary">Scope {scope}</span>
-                      <CheckCircle className="w-5 h-5 text-green-600" />
+                      <span className="font-semibold text-gray-900">Scope {scope}</span>
+                      <motion.div
+                        animate={{
+                          scale: [1, 1.2, 1],
+                          transition: { duration: 1.5, repeat: Infinity, delay: scope * 0.2 }
+                        }}
+                      >
+                        <CheckCircle className="w-5 h-5 text-green-600" />
+                      </motion.div>
                     </div>
-                    <p className="text-2xl font-bold text-text-primary">
+                    <p className="text-2xl font-bold text-gray-900">
                       {scope === 1 ? '1.2' : scope === 2 ? '3.8' : '42.1'} tCO₂e
                     </p>
                   </motion.div>
                 ))}
               </div>
               <div className="text-center">
-                <span className="text-sm text-text-secondary">✓ Auto-tagged • ✓ Verified • ✓ Export Ready</span>
+                <span className="text-sm text-gray-600 font-medium">✓ Auto-tagged • ✓ Verified • ✓ Export Ready</span>
               </div>
             </Card>
           </motion.div>
@@ -480,13 +599,13 @@ const SceneFour = () => {
 // Scene 5: Clean Output, Client-Ready
 const SceneFive = () => {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: false, amount: 0.3 });
+  const isInView = useInView(ref, { once: false, amount: 0.2 });
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end start"]
   });
 
-  const opacity = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0, 1, 1, 0]);
+  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0.3]);
 
   const chartData = [
     { scope: "Scope 1", value: 3, color: "bg-red-500" },
@@ -501,49 +620,57 @@ const SceneFive = () => {
       className="min-h-screen flex items-center justify-center bg-gradient-to-b from-surface to-surface-light"
     >
       <div className="container mx-auto px-6 text-center">
+        {/* Section entrance indicator */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ width: 0 }}
+          animate={isInView ? { width: "100px" } : {}}
+          transition={{ duration: 0.8 }}
+          className="h-1 bg-primary mx-auto mb-8 rounded"
+        />
+
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.3 }}
+          transition={{ delay: 0.2, duration: 0.8 }}
           className="mb-12"
         >
-          <h2 className="text-3xl md:text-5xl font-bold text-text-primary mb-6">
+          <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-6">
             Clean Output, <span className="text-accent">Client-Ready</span>
           </h2>
-          <p className="text-xl text-text-secondary max-w-2xl mx-auto">
+          <p className="text-xl text-gray-700 max-w-2xl mx-auto font-medium">
             From messy data to verified results — delivered faster, with transparency.
           </p>
         </motion.div>
 
         <div className="max-w-5xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            {/* Chart visualization */}
+            {/* Chart visualization with animated bars */}
             <motion.div
-              initial={{ opacity: 0, x: -50 }}
+              initial={{ opacity: 0, x: -60 }}
               animate={isInView ? { opacity: 1, x: 0 } : {}}
-              transition={{ delay: 0.5 }}
+              transition={{ delay: 0.4, duration: 0.8 }}
             >
               <Card className="p-8 bg-surface shadow-elegant border border-border-subtle">
-                <h3 className="text-xl font-semibold text-text-primary mb-6">Emissions Breakdown</h3>
+                <h3 className="text-xl font-semibold text-gray-900 mb-6">Emissions Breakdown</h3>
                 <div className="space-y-4">
                   {chartData.map((item, index) => (
                     <motion.div
                       key={item.scope}
-                      initial={{ opacity: 0, width: 0 }}
-                      animate={isInView ? { opacity: 1, width: `${item.value}%` } : {}}
-                      transition={{ delay: 0.7 + index * 0.2, duration: 1 }}
+                      initial={{ opacity: 0, x: -30 }}
+                      animate={isInView ? { opacity: 1, x: 0 } : {}}
+                      transition={{ delay: 0.6 + index * 0.2, duration: 0.8 }}
                       className="relative"
                     >
                       <div className="flex justify-between items-center mb-2">
-                        <span className="text-text-secondary font-medium">{item.scope}</span>
-                        <span className="text-text-primary font-bold">{item.value}%</span>
+                        <span className="text-gray-700 font-semibold">{item.scope}</span>
+                        <span className="text-gray-900 font-bold">{item.value}%</span>
                       </div>
-                      <div className="w-full bg-gray-200 rounded-full h-3">
+                      <div className="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
                         <motion.div
-                          className={`h-3 rounded-full ${item.color}`}
+                          className={`h-4 rounded-full ${item.color}`}
                           initial={{ width: 0 }}
                           animate={isInView ? { width: `${item.value}%` } : {}}
-                          transition={{ delay: 0.7 + index * 0.2, duration: 1 }}
+                          transition={{ delay: 0.8 + index * 0.2, duration: 1.2, ease: "easeOut" }}
                         />
                       </div>
                     </motion.div>
@@ -552,11 +679,11 @@ const SceneFive = () => {
               </Card>
             </motion.div>
 
-            {/* Export options */}
+            {/* Export options with hover effects */}
             <motion.div
-              initial={{ opacity: 0, x: 50 }}
+              initial={{ opacity: 0, x: 60 }}
               animate={isInView ? { opacity: 1, x: 0 } : {}}
-              transition={{ delay: 0.8 }}
+              transition={{ delay: 0.6, duration: 0.8 }}
               className="space-y-6"
             >
               {[
@@ -566,9 +693,14 @@ const SceneFive = () => {
               ].map((item, index) => (
                 <motion.div
                   key={item.label}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 30 }}
                   animate={isInView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ delay: 1 + index * 0.2 }}
+                  transition={{ delay: 0.8 + index * 0.15, duration: 0.6 }}
+                  whileHover={{ scale: 1.02, x: 10 }}
+                  whileInView={{
+                    x: [0, 5, 0],
+                    transition: { duration: 2, repeat: Infinity, delay: index * 0.3 }
+                  }}
                 >
                   <Card className="p-6 bg-surface shadow-soft border border-border-subtle hover:shadow-elegant transition-all duration-300">
                     <div className="flex items-center space-x-4">
@@ -576,8 +708,8 @@ const SceneFive = () => {
                         <item.icon className="w-6 h-6 text-primary" />
                       </div>
                       <div className="text-left">
-                        <h4 className="font-semibold text-text-primary">{item.label}</h4>
-                        <p className="text-sm text-text-secondary">{item.desc}</p>
+                        <h4 className="font-semibold text-gray-900">{item.label}</h4>
+                        <p className="text-sm text-gray-600">{item.desc}</p>
                       </div>
                     </div>
                   </Card>
@@ -594,13 +726,13 @@ const SceneFive = () => {
 // Scene 6: Built for Consultants
 const SceneSix = () => {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: false, amount: 0.3 });
+  const isInView = useInView(ref, { once: false, amount: 0.2 });
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end start"]
   });
 
-  const opacity = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0, 1, 1, 0]);
+  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0.3]);
 
   const features = [
     { icon: Layers, title: "Scope mapping logic", desc: "Intelligent categorization across all three scopes" },
@@ -617,16 +749,24 @@ const SceneSix = () => {
       className="min-h-screen flex items-center justify-center bg-gradient-to-b from-surface-light to-surface"
     >
       <div className="container mx-auto px-6 text-center">
+        {/* Section entrance indicator */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ width: 0 }}
+          animate={isInView ? { width: "100px" } : {}}
+          transition={{ duration: 0.8 }}
+          className="h-1 bg-primary mx-auto mb-8 rounded"
+        />
+
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.3 }}
+          transition={{ delay: 0.2, duration: 0.8 }}
           className="mb-16"
         >
-          <h2 className="text-3xl md:text-5xl font-bold text-text-primary mb-6">
+          <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-6">
             Built for <span className="text-primary">Consultants</span>
           </h2>
-          <p className="text-xl text-text-secondary max-w-2xl mx-auto">
+          <p className="text-xl text-gray-700 max-w-2xl mx-auto font-medium">
             Everything you need. Nothing you don't.
           </p>
         </motion.div>
@@ -636,19 +776,28 @@ const SceneSix = () => {
             {features.map((feature, index) => (
               <motion.div
                 key={feature.title}
-                initial={{ opacity: 0, y: 50 }}
+                initial={{ opacity: 0, y: 60 }}
                 animate={isInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ delay: 0.5 + index * 0.1 }}
+                transition={{ delay: 0.3 + index * 0.1, duration: 0.8 }}
+                whileHover={{ y: -5, scale: 1.02 }}
+                whileInView={{
+                  y: [0, -3, 0],
+                  transition: { duration: 3, repeat: Infinity, delay: index * 0.2 }
+                }}
               >
                 <Card className="p-8 h-full bg-surface shadow-soft border border-border-subtle hover:shadow-elegant transition-all duration-300 group">
                   <motion.div
-                    className="w-16 h-16 bg-gradient-to-br from-primary to-primary-variant rounded-lg mx-auto mb-6 flex items-center justify-center shadow-elegant group-hover:scale-110 transition-transform duration-300"
-                    whileHover={{ rotate: 5 }}
+                    className="w-16 h-16 bg-gradient-to-br from-primary to-primary-variant rounded-lg mx-auto mb-6 flex items-center justify-center shadow-elegant"
+                    whileHover={{ rotate: 10, scale: 1.1 }}
+                    whileInView={{
+                      scale: [1, 1.05, 1],
+                      transition: { duration: 2, repeat: Infinity, delay: index * 0.3 }
+                    }}
                   >
                     <feature.icon className="w-8 h-8 text-white" />
                   </motion.div>
-                  <h3 className="text-lg font-semibold text-text-primary mb-4">{feature.title}</h3>
-                  <p className="text-text-secondary leading-relaxed">{feature.desc}</p>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">{feature.title}</h3>
+                  <p className="text-gray-600 leading-relaxed">{feature.desc}</p>
                 </Card>
               </motion.div>
             ))}
@@ -662,13 +811,13 @@ const SceneSix = () => {
 // Scene 7: Get Early Access
 const SceneSeven = () => {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: false, amount: 0.3 });
+  const isInView = useInView(ref, { once: false, amount: 0.2 });
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end start"]
   });
 
-  const opacity = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0, 1, 1, 0]);
+  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0.3]);
 
   return (
     <motion.section 
@@ -677,55 +826,71 @@ const SceneSeven = () => {
       className="min-h-screen flex items-center justify-center bg-gradient-to-b from-surface to-surface-variant relative overflow-hidden"
     >
       <div className="container mx-auto px-6 text-center relative z-10">
+        {/* Section entrance indicator */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ width: 0 }}
+          animate={isInView ? { width: "100px" } : {}}
+          transition={{ duration: 0.8 }}
+          className="h-1 bg-primary mx-auto mb-8 rounded"
+        />
+
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.3 }}
+          transition={{ delay: 0.2, duration: 0.8 }}
           className="max-w-3xl mx-auto"
         >
-          <h2 className="text-3xl md:text-5xl font-bold text-text-primary mb-6">
+          <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-6">
             Get <span className="text-primary">Early Access</span>
           </h2>
-          <p className="text-xl text-text-secondary mb-12 leading-relaxed">
+          <p className="text-xl text-gray-700 mb-12 leading-relaxed font-medium">
             Join the next generation of carbon consultants. Streamline your LCA process, 
             deliver better results, and scale your practice.
           </p>
 
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 40 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ delay: 0.6 }}
+            transition={{ delay: 0.5, duration: 0.8 }}
             className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12"
           >
-            <Button 
-              size="lg"
-              className="h-14 text-lg font-semibold bg-primary hover:bg-primary-variant text-white shadow-elegant hover:shadow-elegant-lg transition-all duration-300"
-            >
-              Request Access
-            </Button>
-            <Button 
-              variant="outline"
-              size="lg"
-              className="h-14 text-lg font-semibold border-2 border-primary text-primary hover:bg-primary hover:text-white transition-all duration-300"
-            >
-              Try the Demo
-            </Button>
-            <Button 
-              variant="secondary"
-              size="lg"
-              className="h-14 text-lg font-semibold bg-surface-variant hover:bg-accent transition-all duration-300"
-            >
-              Join Pilot Network
-            </Button>
+            <motion.div whileHover={{ scale: 1.05, y: -5 }} whileTap={{ scale: 0.95 }}>
+              <Button 
+                size="lg"
+                className="h-14 w-full text-lg font-semibold bg-primary hover:bg-primary-variant text-white shadow-elegant hover:shadow-elegant-lg transition-all duration-300"
+              >
+                Request Access
+              </Button>
+            </motion.div>
+            
+            <motion.div whileHover={{ scale: 1.05, y: -5 }} whileTap={{ scale: 0.95 }}>
+              <Button 
+                variant="outline"
+                size="lg"
+                className="h-14 w-full text-lg font-semibold border-2 border-primary text-primary hover:bg-primary hover:text-white transition-all duration-300"
+              >
+                Try the Demo
+              </Button>
+            </motion.div>
+            
+            <motion.div whileHover={{ scale: 1.05, y: -5 }} whileTap={{ scale: 0.95 }}>
+              <Button 
+                variant="secondary"
+                size="lg"
+                className="h-14 w-full text-lg font-semibold bg-surface-variant hover:bg-accent transition-all duration-300"
+              >
+                Join Pilot Network
+              </Button>
+            </motion.div>
           </motion.div>
 
           <motion.div
             initial={{ opacity: 0 }}
             animate={isInView ? { opacity: 1 } : {}}
-            transition={{ delay: 0.9 }}
-            className="text-text-secondary"
+            transition={{ delay: 0.8, duration: 0.8 }}
+            className="text-gray-600"
           >
-            <p className="mb-4">Trusted by leading sustainability consultants</p>
+            <p className="mb-4 font-medium">Trusted by leading sustainability consultants</p>
             <div className="flex justify-center space-x-8 text-sm">
               <span>✓ Free during beta</span>
               <span>✓ Priority support</span>
@@ -736,8 +901,8 @@ const SceneSeven = () => {
       </div>
 
       {/* Background data flow visualization */}
-      <div className="absolute inset-0 overflow-hidden opacity-20">
-        {Array.from({ length: 15 }).map((_, i) => (
+      <div className="absolute inset-0 overflow-hidden opacity-10">
+        {isInView && Array.from({ length: 15 }).map((_, i) => (
           <motion.div
             key={i}
             className="absolute w-2 h-2 bg-primary rounded-full"
@@ -772,7 +937,7 @@ const ConsultantHero = () => {
     <div className="relative">
       {/* Progress indicator */}
       <motion.div
-        className="fixed top-0 left-0 right-0 h-1 bg-primary z-50 origin-left"
+        className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary to-primary-variant z-50 origin-left"
         style={{ scaleX: scrollProgress.get() / 100 }}
       />
 
