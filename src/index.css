@@ -17,8 +17,15 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 222.2 47.4% 11.2%;
+    --primary: 159 69% 63%;
     --primary-foreground: 210 40% 98%;
+    
+    /* Emisia brand colors */
+    --emisia-green: 159 69% 63%;
+    --emisia-green-light: 152 68% 80%;
+    --carbon-light: 156 163 175;
+    --carbon-sage: 134 154 134;
+    --carbon-mint: 167 199 167;
 
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
@@ -26,7 +33,7 @@ All colors MUST be HSL.
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 210 40% 96.1%;
+    --accent: 152 68% 80%;
     --accent-foreground: 222.2 47.4% 11.2%;
 
     --destructive: 0 84.2% 60.2%;

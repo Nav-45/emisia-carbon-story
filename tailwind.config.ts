@@ -44,6 +44,11 @@ export default {
 					DEFAULT: 'hsl(var(--accent))',
 					foreground: 'hsl(var(--accent-foreground))'
 				},
+				'emisia-green': 'hsl(var(--emisia-green))',
+				'emisia-green-light': 'hsl(var(--emisia-green-light))',
+				'carbon-light': 'hsl(var(--carbon-light))',
+				'carbon-sage': 'hsl(var(--carbon-sage))',
+				'carbon-mint': 'hsl(var(--carbon-mint))',
 				popover: {
 					DEFAULT: 'hsl(var(--popover))',
 					foreground: 'hsl(var(--popover-foreground))'

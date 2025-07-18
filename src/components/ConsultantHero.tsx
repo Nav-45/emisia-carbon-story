@@ -477,10 +477,10 @@ const SceneFour = () => {
           className="mb-12"
         >
           <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-6">
-            Introducing <span className="text-primary">Capture</span>
+            Introducing <span className="text-primary">Emisia</span>
           </h2>
           <p className="text-xl text-gray-700 max-w-2xl mx-auto font-medium">
-            Capture automates carbon calculations — from invoices to scope-tagged outputs.
+            Emisia automates carbon calculations — from invoices to scope-tagged outputs.
           </p>
         </motion.div>
 
@@ -935,7 +935,7 @@ const ConsultantHero = () => {
 
   return (
     <div className="relative">
-      {/* Emisia.io Logo Header */}
+      {/* Emisia Logo Header */}
       <motion.div 
         className="fixed top-8 left-8 z-50"
         initial={{ opacity: 0, y: -20 }}
@@ -943,15 +943,11 @@ const ConsultantHero = () => {
         transition={{ delay: 0.5, duration: 0.8 }}
       >
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-1">
-            <div className="w-4 h-4 bg-carbon-mint rounded-sm rotate-12 opacity-90"></div>
-            <div className="w-4 h-4 bg-carbon-sage rounded-sm -rotate-12 opacity-70"></div>
-            <div className="w-4 h-4 bg-carbon-mint rounded-sm rotate-45 opacity-80"></div>
-          </div>
-          <div className="flex flex-col">
-            <span className="text-xl font-bold text-gray-900">Emisia.io</span>
-            <span className="text-xs text-gray-600">Smart Carbon Reporting</span>
-          </div>
+          <img 
+            src="/lovable-uploads/a7d0859c-166d-4a61-bdc8-78d821279205.png" 
+            alt="Emisia Logo" 
+            className="h-12 w-auto object-contain"
+          />
         </div>
       </motion.div>
 
