@@ -60,6 +60,10 @@ All colors MUST be HSL.
     --sidebar-border: 220 13% 91%;
 
     --sidebar-ring: 217.2 91.2% 59.8%;
+    
+    /* Green gradient background */
+    --surface: 152 68% 96%;
+    --surface-light: 155 70% 98%;
   }
 
   .dark {
