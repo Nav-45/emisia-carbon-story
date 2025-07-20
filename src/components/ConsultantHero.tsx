@@ -53,8 +53,8 @@ const SceneOne = () => {
   return (
     <motion.section 
       ref={ref}
-      style={{ opacity }}
-      className="min-h-screen flex items-center justify-center relative overflow-hidden bg-gradient-to-b from-surface to-surface-light pt-20"
+      style={{ opacity, background: 'var(--gradient-hero)' }}
+      className="min-h-screen flex items-center justify-center relative overflow-hidden pt-20"
     >
       <div className="container mx-auto px-6 text-center relative z-10">
         {/* Animated Emisia Logo */}

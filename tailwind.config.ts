@@ -67,6 +67,7 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
+				'gradient-hero': 'var(--gradient-hero)',
 				surface: 'hsl(var(--surface))',
 				'surface-light': 'hsl(var(--surface-light))'
 			},
