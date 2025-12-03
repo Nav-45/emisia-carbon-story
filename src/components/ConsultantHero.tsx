@@ -127,12 +127,9 @@ const SceneOne = () => {
         duration: 0.8
       }} className="max-w-2xl mx-auto">
           {/* High contrast, readable text */}
-          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-4">
-            Professional Carbon Reporting <span className="text-primary">Made Accessible</span>
+          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-4">Automated Carbon Reporting<span className="text-primary">Made Accessible</span>
           </h1>
-          <p className="text-xl text-gray-700 leading-relaxed font-medium">
-            Streamline your carbon assessment process with intelligent automation.
-          </p>
+          <p className="text-xl text-gray-700 leading-relaxed font-medium">AI-powered automation that turns invoices and supplier data into carbon emissions without the spreadsheets.</p>
           
           {/* Animated Icons Section */}
           <motion.div className="flex justify-center items-center gap-8 md:gap-12 mt-8 mb-6" initial={{
