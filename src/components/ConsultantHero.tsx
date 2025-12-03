@@ -381,7 +381,7 @@ const SceneTwo = () => {
                 delay: index * 0.2
               }
             }}>
-                  <Card className="p-4 bg-surface shadow-soft border border-border-subtle hover:shadow-elegant transition-all duration-300">
+                  <Card className="p-4 bg-surface shadow-soft border border-border-subtle hover:shadow-elegant transition-all duration-300 px-[16px]">
                     <item.icon className="w-8 h-8 text-gray-600 mx-auto mb-2" />
                     <p className="text-sm text-gray-600 font-medium">{item.label}</p>
                   </Card>
