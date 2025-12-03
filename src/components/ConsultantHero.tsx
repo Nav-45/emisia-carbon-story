@@ -319,12 +319,9 @@ const SceneTwo = () => {
         delay: 0.2,
         duration: 0.8
       }} className="mb-12">
-          <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-6">
-            The Consultant's <span className="text-accent">Challenge</span>
+          <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-6">Your Frustration, Our Solution<span className="text-accent">Challenge</span>
           </h2>
-          <p className="text-xl text-gray-700 max-w-2xl mx-auto font-medium">
-            Carbon consultants piece together data from scattered sources…
-          </p>
+          <p className="text-xl text-gray-700 max-w-2xl mx-auto font-medium text-center">You shouldn’t need enterprise budgets to meet basic sustainability requirements.</p>
         </motion.div>
 
         <div className="relative max-w-4xl mx-auto">
