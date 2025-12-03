@@ -448,9 +448,7 @@ const SceneThree = () => {
           <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-6">
             A Complex <span className="text-primary">Puzzle</span>
           </h2>
-          <p className="text-xl text-gray-700 max-w-2xl mx-auto font-medium">
-            …map it to frameworks, scopes, and factors…
-          </p>
+          <p className="text-xl text-gray-700 max-w-2xl mx-auto font-medium">…map it to frameworks, scopes and factors…</p>
         </motion.div>
 
         <div className="max-w-6xl mx-auto">
@@ -595,7 +593,7 @@ const SceneFour = () => {
         duration: 0.8
       }} className="mb-12">
           <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-6">
-            Introducing <span className="text-primary">Emisia</span>
+            Introducing <span className="text-primary">Emisio</span>
           </h2>
           <p className="text-xl text-gray-700 max-w-2xl mx-auto font-medium">
             Emisia automates carbon calculations — from invoices to scope-tagged outputs.
@@ -959,11 +957,9 @@ const SceneSix = () => {
         duration: 0.8
       }} className="mb-16">
           <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-6">
-            Built for <span className="text-primary">Consultants</span>
+            Built for <span className="text-primary">SMEs</span>
           </h2>
-          <p className="text-xl text-gray-700 max-w-2xl mx-auto font-medium">
-            Everything you need. Nothing you don't.
-          </p>
+          <p className="text-xl text-gray-700 max-w-2xl mx-auto font-medium text-left">Hassle and jargon free, ready to use tool, </p>
         </motion.div>
 
         <div className="max-w-6xl mx-auto">
